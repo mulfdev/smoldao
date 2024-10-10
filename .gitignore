@@ -1,9 +1,6 @@
 # Ignore node_modules directories
 node_modules
 
-# Ignore pnpm-lock.yaml file
-pnpm-lock.yaml
-
 # Ignore .pnpm-store directory
 .pnpm-store
 
