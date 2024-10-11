@@ -13,9 +13,8 @@ type ProvidersProps = {
   };
 };
 
-
 export const Web3Provider = ({ children, env }: ProvidersProps) => {
-  const config = setupWagmi(env.RPC_URL, env.WALLETCONNECT_PROJECT_ID)
+  const config = setupWagmi(env.RPC_URL, env.WALLETCONNECT_PROJECT_ID);
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>

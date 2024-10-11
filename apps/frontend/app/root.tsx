@@ -8,7 +8,7 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
-import { Web3Provider } from "./providers"
+import { Web3Provider } from "./providers";
 
 import "./tailwind.css";
 
@@ -25,22 +25,20 @@ export const links: LinksFunction = () => [
   },
 ];
 
-
 export async function loader() {
   if (typeof process.env.WALLETCONNECT_PROJECT_ID !== "string") {
-    throw new Error("WALLETCONNECT_PROJECT_ID required")
+    throw new Error("WALLETCONNECT_PROJECT_ID required");
   }
   if (typeof process.env.RPC_URL !== "string") {
-    throw new Error("RPC_URL required")
+    throw new Error("RPC_URL required");
   }
-
 
   return {
     ENV: {
       WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
-      RPC_URL: process.env.RPC_URL
-    }
-  }
+      RPC_URL: process.env.RPC_URL,
+    },
+  };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -62,7 +60,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-
-  const { ENV } = useLoaderData<typeof loader>()
-  return <Web3Provider env={ENV}><Outlet /></Web3Provider>;
+  const { ENV } = useLoaderData<typeof loader>();
+  return (
+    <Web3Provider env={ENV}>
+      <Outlet />
+    </Web3Provider>
+  );
 }
