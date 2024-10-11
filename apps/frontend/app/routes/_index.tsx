@@ -35,7 +35,7 @@ export default function Index() {
           <ConnectKitButton />
 
           <p className="leading-6 text-gray-700 dark:text-gray-200">
-            What&apos;s next?
+            welcome to smoldao
           </p>
           <ul>
             {resources.map(({ href, text, icon }) => (
