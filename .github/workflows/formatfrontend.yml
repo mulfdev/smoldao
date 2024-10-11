@@ -1,3 +1,4 @@
+# This workflow formats the frontend code on push to main and can be manually triggered
 name: Format Frontend Code
 
 on:
@@ -6,11 +7,11 @@ on:
       - main
     paths:
       - 'apps/frontend/**'
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   format:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
