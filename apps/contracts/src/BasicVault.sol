@@ -7,9 +7,20 @@ contract Vault {
     SmolGov public immutable token;
 
     uint256 public totalSupply;
+    mapping(address => uint256) public balanceOf;
 
     constructor(address _token) {
         token = SmolGov(_token);
+    }
+
+    function _mint(address _to, uint256 _shares) private {
+        totalSupply += _shares;
+        balanceOf[_to] += _shares;
+    }
+
+    function _burn(address _from, uint256 _shares) private {
+        totalSupply -= _shares;
+        balanceOf[_from] -= _shares;
     }
 
     function deposit(uint256 _amount) external {
@@ -30,7 +41,8 @@ contract Vault {
             shares = (_amount * totalSupply) / token.balanceOf(address(this));
         }
 
-        token.mint(msg.sender, shares);
+        _mint(msg.sender, shares);
+        token.mint(msg.sender, _amount);
     }
 
     function withdraw(uint256 _shares) external {
@@ -45,6 +57,7 @@ contract Vault {
         a = sB / T
         */
         uint256 amount = (_shares * token.balanceOf(address(this))) / totalSupply;
+        _burn(msg.sender, _shares);
         token.burn(amount);
     }
 }
