@@ -9,7 +9,7 @@ import { Nonces } from "@openzeppelin/contracts/utils/Nonces.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
-contract SmolGov is ERC20, ERC20Permit, ERC20Votes, Ownable {
+contract SmolGov is ERC20, ERC20Permit, ERC20Votes, ERC20Burnable, Ownable {
     constructor(
         address initialOwner
     ) ERC20("SmolGov", "SmolG") Ownable(initialOwner) ERC20Permit("SmolGov") {}
