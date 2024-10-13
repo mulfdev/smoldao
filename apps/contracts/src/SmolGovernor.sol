@@ -20,7 +20,7 @@ contract SmolGovernor is
         IVotes _token,
         TimelockController _timelock
     )
-        Governor("MyGovernor")
+        Governor("SmolGovernor")
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(1)
         GovernorTimelockControl(_timelock)
