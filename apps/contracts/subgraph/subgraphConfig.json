@@ -1,0 +1,17 @@
+{
+  "version": "1",
+  "name": "SmolDAO",
+  "abis": {
+    "smolGovernor": {
+      "path": "./smolgovernorAbi.json"
+    }
+  },
+  "instances": [
+    {
+      "abi": "smolGovernor",
+      "address": "0x8eb7a90e7b81b66ba359fbfbb8222d7c0404b402",
+      "startBlock": 88421851,
+      "chain": "arbitrum-sepolia"
+    }
+  ]
+}
