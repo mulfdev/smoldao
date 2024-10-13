@@ -5,12 +5,13 @@ import { BaseScript } from "./Base.s.sol";
 import { SmolGov } from "../src/SmolGov.sol";
 import { SmolGovernor } from "../src/SmolGovernor.sol";
 import "@openzeppelin/contracts/governance/TimelockController.sol";
+import "forge-std/src/console.sol";
 
 contract Deploy is BaseScript {
     function run() public broadcaster {
         SmolGov govToken = new SmolGov(deployer);
 
-        // Deploy TimelockController with deployer as temporary proposer
+        // Deploy TimelockController with deployer as temporary proposer and admin
         address[] memory proposers = new address[](1);
         proposers[0] = deployer;
         address[] memory executors = new address[](1);
@@ -22,7 +23,7 @@ contract Deploy is BaseScript {
             timelockDelay,
             proposers,
             executors,
-            address(0) // No additional admin
+            deployer // Keep deployer as admin temporarily
         );
 
         // Deploy Governor
@@ -31,14 +32,16 @@ contract Deploy is BaseScript {
         // Update TimelockController roles
         timelock.grantRole(timelock.PROPOSER_ROLE(), address(governor));
         timelock.grantRole(timelock.CANCELLER_ROLE(), address(governor));
+
+        // Revoke proposer and canceller roles from deployer
         timelock.revokeRole(timelock.PROPOSER_ROLE(), deployer);
         timelock.revokeRole(timelock.CANCELLER_ROLE(), deployer);
 
-        // The TimelockController is already its own admin, so we don't need to grant it the admin role
-        // We only need to revoke the admin role from the deployer if it was granted in the constructor
-        if (timelock.hasRole(timelock.DEFAULT_ADMIN_ROLE(), deployer)) {
-            timelock.revokeRole(timelock.DEFAULT_ADMIN_ROLE(), deployer);
-        }
+        // Make timelock its own admin
+        timelock.grantRole(timelock.DEFAULT_ADMIN_ROLE(), address(timelock));
+
+        // Revoke admin role from deployer (this should be the last step)
+        timelock.revokeRole(timelock.DEFAULT_ADMIN_ROLE(), deployer);
 
         // Log deployed addresses
         console.log("Governance Token (SmolGov) deployed at:", address(govToken));
