@@ -6,7 +6,6 @@ import { SmolGov } from "../src/SmolGov.sol";
 
 contract Deploy is BaseScript {
     function run() public broadcaster {
-        writeFile();
         new SmolGov(deployer);
     }
 }
