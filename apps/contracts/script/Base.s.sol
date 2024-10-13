@@ -20,25 +20,4 @@ abstract contract BaseScript is Script {
         _;
         vm.stopBroadcast();
     }
-
-    function writeFile() internal {
-        string memory deploymentInfo = vm.serializeJson(
-            "deploymentInfo",
-            abi.encode(
-                "contractName",
-                "YourContract",
-                "address",
-                address(deployedContract),
-                "deploymentTime",
-                block.timestamp
-            )
-        );
-
-        // Write deployment info to a JSON file
-        vm.writeJson(deploymentInfo, "./deployment-info.json");
-
-        string memory path = "file.txt";
-        string memory data = "hello world";
-        vm.writeFile(path, data);
-    }
 }
