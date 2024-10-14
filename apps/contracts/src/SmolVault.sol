@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import { SmolGov } from "./SmolGov.sol";
 
-contract Vault {
+contract SmolVault {
     SmolGov public immutable token;
 
     uint256 public totalSupply;
@@ -42,7 +42,7 @@ contract Vault {
         }
 
         _mint(msg.sender, shares);
-        token.mint(msg.sender, _amount);
+        token.mint(msg.sender, shares);
     }
 
     function withdraw(uint256 _shares) external {
