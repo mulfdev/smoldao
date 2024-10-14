@@ -9,7 +9,7 @@
   "instances": [
     {
       "abi": "smolGovernor",
-      "address": "0x8eb7a90e7b81b66ba359fbfbb8222d7c0404b402",
+      "address": "0x26Bfc4B5E4850f3B2472E97A922Ed93158169b34",
       "startBlock": 88421851,
       "chain": "arbitrum-sepolia"
     }
