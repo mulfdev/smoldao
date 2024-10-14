@@ -10,7 +10,7 @@ function truncateString(str: string) {
 const ProposalInfo = ({ proposals }: any) => {
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Proposals</h1>
+      <h1 className="text-3xl font-bold mb-6 text-white">Proposals</h1>
       {proposals.map((proposal: any) => (
         <div key={proposal.proposalId} className="bg-white shadow-md rounded-lg p-6 mb-6">
           <h2 className="text-2xl font-semibold mb-4">Proposal {truncateString(proposal.proposalId)}</h2>
