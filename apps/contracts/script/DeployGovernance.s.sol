@@ -5,21 +5,24 @@ import { BaseScript } from "./Base.s.sol";
 import { SmolGov } from "../src/SmolGov.sol";
 import { SmolGovernor } from "../src/SmolGovernor.sol";
 import { SmolVault } from "../src/SmolVault.sol";
-
 import "@openzeppelin/contracts/governance/TimelockController.sol";
 import "forge-std/src/console.sol";
 
 contract Deploy is BaseScript {
     function run() public broadcaster {
-        SmolVault smolVault = new SmolVault(deployer);
-        SmolGov govToken = new SmolGov(address(smolVault));
+        // Deploy SmolGov first
+        SmolGov govToken = new SmolGov(deployer);
 
-        // Deploy TimelockController with deployer as temporary proposer and admin
+        // Then deploy SmolVault with the govToken address
+        SmolVault smolVault = new SmolVault(address(govToken));
+
+        // Transfer ownership of govToken to smolVault
+        govToken.transferOwnership(address(smolVault));
+        // Rest of the deployment script remains the same...
         address[] memory proposers = new address[](1);
         proposers[0] = deployer;
         address[] memory executors = new address[](1);
         executors[0] = address(0); // Allows anyone to execute
-
         uint256 timelockDelay = 300; // 5 minutes
 
         TimelockController timelock = new TimelockController(
