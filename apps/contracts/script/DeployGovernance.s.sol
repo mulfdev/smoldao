@@ -4,12 +4,15 @@ pragma solidity ^0.8.25;
 import { BaseScript } from "./Base.s.sol";
 import { SmolGov } from "../src/SmolGov.sol";
 import { SmolGovernor } from "../src/SmolGovernor.sol";
+import { SmolVault } from "../src/SmolVault.sol";
+
 import "@openzeppelin/contracts/governance/TimelockController.sol";
 import "forge-std/src/console.sol";
 
 contract Deploy is BaseScript {
     function run() public broadcaster {
-        SmolGov govToken = new SmolGov(deployer);
+        SmolVault smolVault = new SmolVault(deployer);
+        SmolGov govToken = new SmolGov(address(smolVault));
 
         // Deploy TimelockController with deployer as temporary proposer and admin
         address[] memory proposers = new address[](1);
