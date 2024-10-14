@@ -2,7 +2,7 @@ import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setupWagmi } from "~/wagmiConfig";
 import { ConnectKitProvider } from "connectkit";
-import { Provider as GqlProvider } from 'urql';
+import { Provider as GqlProvider } from "urql";
 import { gqlClient } from "./gqlConfig";
 const queryClient = new QueryClient();
 
@@ -19,7 +19,9 @@ export const Web3Provider = ({ children, env }: ProvidersProps) => {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider><GqlProvider value={gqlClient}>{children}</GqlProvider></ConnectKitProvider>
+        <ConnectKitProvider>
+          <GqlProvider value={gqlClient}>{children}</GqlProvider>
+        </ConnectKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
