@@ -8,7 +8,6 @@ import "forge-std/src/console.sol";
 
 contract VaultDeposit is BaseScript {
     function run() external broadcaster {
-        // Load deployed addresses from the JSON file
         string memory json = vm.readFile("deployed_addresses.json");
         address vaultAddress = abi.decode(vm.parseJson(json, ".SmolVault"), (address));
 
@@ -19,23 +18,26 @@ contract VaultDeposit is BaseScript {
         console.log("Vault address:", address(vault));
         console.log("Token address:", address(token));
 
-        uint256 depositAmount = 1000; // Adjust this amount as needed
+        uint256 depositAmount = 2000e18;
         console.log("Attempting to deposit:", depositAmount);
 
-        // Check initial balances
         uint256 initialVaultBalance = vault.balanceOf(deployer);
         uint256 initialTokenBalance = token.balanceOf(deployer);
-        console.log("Initial vault balance:", initialVaultBalance);
-        console.log("Initial token balance:", initialTokenBalance);
+        console.log("Initial vault shares balance:", initialVaultBalance);
+        console.log("Initial user token balance:", initialTokenBalance);
 
-        // Attempt to deposit
         try vault.deposit(depositAmount) {
             console.log("Deposit successful");
-
             uint256 newVaultBalance = vault.balanceOf(deployer);
             uint256 newTokenBalance = token.balanceOf(deployer);
-            console.log("New vault balance:", newVaultBalance);
-            console.log("New token balance:", newTokenBalance);
+            console.log("New vault shares balance:", newVaultBalance);
+            console.log("New user token balance:", newTokenBalance);
+            console.log("Shares minted:", newVaultBalance - initialVaultBalance);
+            console.log("Tokens minted:", newTokenBalance - initialTokenBalance);
+
+            // Delegate votes to self
+            token.delegate(deployer);
+            console.log("Votes delegated to self");
         } catch Error(string memory reason) {
             console.log("Deposit failed. Reason:", reason);
         } catch (bytes memory lowLevelData) {
@@ -43,12 +45,14 @@ contract VaultDeposit is BaseScript {
             console.logBytes(lowLevelData);
         }
 
-        // Final checks
         uint256 vaultTotalSupply = vault.totalSupply();
         console.log("Vault total supply:", vaultTotalSupply);
-
         address tokenOwner = token.owner();
         console.log("Token owner:", tokenOwner);
         console.log("Is vault the token owner?", tokenOwner == address(vault));
+
+        // Check voting power
+        uint256 votingPower = token.getVotes(deployer);
+        console.log("Deployer voting power:", votingPower);
     }
 }
