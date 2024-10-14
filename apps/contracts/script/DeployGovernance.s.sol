@@ -46,9 +46,32 @@ contract Deploy is BaseScript {
         // Revoke admin role from deployer (this should be the last step)
         timelock.revokeRole(timelock.DEFAULT_ADMIN_ROLE(), deployer);
 
+        string memory jsonOutput = string(
+            abi.encodePacked(
+                "{\n",
+                '  "SmolGov": "',
+                vm.toString(address(govToken)),
+                '",\n',
+                '  "TimelockController": "',
+                vm.toString(address(timelock)),
+                '",\n',
+                '  "SmolGovernor": "',
+                vm.toString(address(governor)),
+                '",\n',
+                '  "SmolVault": "',
+                vm.toString(address(smolVault)),
+                '"\n',
+                "}"
+            )
+        );
+
+        // Write the JSON string to a file
+        vm.writeFile("deployed_addresses.json", jsonOutput);
+
         // Log deployed addresses
         console.log("Governance Token (SmolGov) deployed at:", address(govToken));
         console.log("TimelockController deployed at:", address(timelock));
         console.log("Governor (SmolGovernor) deployed at:", address(governor));
+        console.log("Vault (SmolVault) deployed at:", address(smolVault));
     }
 }
