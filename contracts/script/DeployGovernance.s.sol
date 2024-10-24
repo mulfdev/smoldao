@@ -72,10 +72,7 @@ contract Deploy is BaseScript {
         vm.writeFile("deployed_addresses.json", jsonOutput);
 
         // Log deployed addresses
-        console.log(
-            "Governance Token (SmolGov) deployed at:",
-            address(govToken)
-        );
+        console.log("Governance Token (SmolGov) deployed at:", address(govToken));
         console.log("TimelockController deployed at:", address(timelock));
         console.log("Governor (SmolGovernor) deployed at:", address(governor));
         console.log("Vault (SmolVault) deployed at:", address(smolVault));

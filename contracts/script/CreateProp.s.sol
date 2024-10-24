@@ -10,14 +10,8 @@ contract CreateProp is BaseScript {
     function run() external broadcaster {
         // Load deployed addresses from the JSON file
         string memory json = vm.readFile("deployed_addresses.json");
-        address governorAddress = abi.decode(
-            vm.parseJson(json, ".SmolGovernor"),
-            (address)
-        );
-        address tokenAddress = abi.decode(
-            vm.parseJson(json, ".SmolGov"),
-            (address)
-        );
+        address governorAddress = abi.decode(vm.parseJson(json, ".SmolGovernor"), (address));
+        address tokenAddress = abi.decode(vm.parseJson(json, ".SmolGov"), (address));
 
         SmolGovernor governor = SmolGovernor(payable(governorAddress));
         SmolGov token = SmolGov(tokenAddress);
@@ -51,9 +45,7 @@ contract CreateProp is BaseScript {
         }
 
         // Create the proposal
-        try governor.propose(targets, values, calldatas, description) returns (
-            uint256 proposalId
-        ) {
+        try governor.propose(targets, values, calldatas, description) returns (uint256 proposalId) {
             console.log("Proposal created successfully");
             console.log("Proposal ID:", proposalId);
 
