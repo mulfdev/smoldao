@@ -9,10 +9,7 @@ import "forge-std/console.sol";
 contract VaultDeposit is BaseScript {
     function run() external broadcaster {
         string memory json = vm.readFile("deployed_addresses.json");
-        address vaultAddress = abi.decode(
-            vm.parseJson(json, ".SmolVault"),
-            (address)
-        );
+        address vaultAddress = abi.decode(vm.parseJson(json, ".SmolVault"), (address));
 
         SmolVault vault = SmolVault(vaultAddress);
         SmolGov token = vault.token();
@@ -35,14 +32,8 @@ contract VaultDeposit is BaseScript {
             uint256 newTokenBalance = token.balanceOf(deployer);
             console.log("New vault shares balance:", newVaultBalance);
             console.log("New user token balance:", newTokenBalance);
-            console.log(
-                "Shares minted:",
-                newVaultBalance - initialVaultBalance
-            );
-            console.log(
-                "Tokens minted:",
-                newTokenBalance - initialTokenBalance
-            );
+            console.log("Shares minted:", newVaultBalance - initialVaultBalance);
+            console.log("Tokens minted:", newTokenBalance - initialTokenBalance);
 
             // Delegate votes to self
             token.delegate(deployer);
