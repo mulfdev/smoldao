@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { ConnectKitButton } from "connectkit";
+import { Suspense } from "react";
 
 import { gql, useQuery } from "urql";
 import ProposalInfo from "~/components/ViewProposals";
@@ -20,6 +21,11 @@ const PropsQuery = gql`
     }
   }
 `;
+
+
+function Loading() {
+  return <>Loading</>
+}
 
 export const meta: MetaFunction = () => {
   return [
@@ -52,8 +58,9 @@ export default function Index() {
               Welcome to SmolDAO
             </h1>
           </header>
-
-          <ProposalInfo proposals={data.proposalCreateds} />
+          <Suspense fallback={<Loading />}>
+            <ProposalInfo proposals={data.proposalCreateds} />
+          </Suspense>
         </div>
       </div>
     </>
