@@ -11,6 +11,7 @@ import type { LinksFunction } from "@remix-run/node";
 import { Web3Provider } from "./providers";
 
 import "./tailwind.css";
+import { ConnectKitButton } from "connectkit";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -50,7 +51,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="text-white w-full flex justify-center align-center">
+      <body className="text-white w-full flex flex-col justify-center align-center">
+
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -63,7 +65,14 @@ export default function App() {
   const { ENV } = useLoaderData<typeof loader>();
   return (
     <Web3Provider env={ENV}>
-      <Outlet />
+      <div className="p-8 w-full flex justify-end items-center">
+        <ConnectKitButton />
+      </div>
+      <div className="flex items-center justify-center">
+        <div className="flex flex-col items-center gap-16 w-full">
+          <Outlet />
+        </div>
+      </div>
     </Web3Provider>
   );
 }
