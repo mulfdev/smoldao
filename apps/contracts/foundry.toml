@@ -15,7 +15,12 @@
   solc = "0.8.25"
   src = "src"
   test = "test"
-
+remappings = [
+    '@layerzerolabs/oapp-evm/=lib/devtools/packages/oapp-evm/',
+    '@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/',
+    'forge-std/=lib/forge-std/src/',
+    '@layerzerolabs/lz-evm-protocol-v2/=lib/layerzero-v2/packages/layerzero-v2/evm/protocol'
+]
 [profile.ci]
   fuzz = { runs = 10_000 }
   verbosity = 4
