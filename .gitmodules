@@ -1,3 +1,6 @@
 [submodule "apps/contracts/lib/devtools"]
 	path = apps/contracts/lib/devtools
 	url = https://github.com/LayerZero-Labs/devtools
+[submodule "apps/contracts/lib/layerzero-v2"]
+	path = apps/contracts/lib/layerzero-v2
+	url = https://github.com/LayerZero-Labs/layerzero-v2
