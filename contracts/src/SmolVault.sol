@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { SmolGov } from "./SmolGov.sol";
+import {SmolGov} from "./SmolGov.sol";
 
 contract SmolVault {
     SmolGov public immutable token;
