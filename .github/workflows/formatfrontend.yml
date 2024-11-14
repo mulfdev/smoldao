@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - 'apps/frontend/**'
+      - './frontend/**'
   workflow_dispatch:  # Allows manual triggering
 
 jobs:

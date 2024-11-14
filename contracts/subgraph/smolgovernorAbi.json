@@ -685,22 +685,22 @@
     ],
     "outputs": [
       {
-        "name": "",
+        "name": "targets",
         "type": "address[]",
         "internalType": "address[]"
       },
       {
-        "name": "",
+        "name": "values",
         "type": "uint256[]",
         "internalType": "uint256[]"
       },
       {
-        "name": "",
+        "name": "calldatas",
         "type": "bytes[]",
         "internalType": "bytes[]"
       },
       {
-        "name": "",
+        "name": "descriptionHash",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -719,27 +719,27 @@
     ],
     "outputs": [
       {
-        "name": "",
+        "name": "proposalId",
         "type": "uint256",
         "internalType": "uint256"
       },
       {
-        "name": "",
+        "name": "targets",
         "type": "address[]",
         "internalType": "address[]"
       },
       {
-        "name": "",
+        "name": "values",
         "type": "uint256[]",
         "internalType": "uint256[]"
       },
       {
-        "name": "",
+        "name": "calldatas",
         "type": "bytes[]",
         "internalType": "bytes[]"
       },
       {
-        "name": "",
+        "name": "descriptionHash",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -1398,7 +1398,7 @@
   },
   {
     "type": "error",
-    "name": "FailedInnerCall",
+    "name": "FailedCall",
     "inputs": []
   },
   {
@@ -1496,6 +1496,11 @@
         "internalType": "address"
       }
     ]
+  },
+  {
+    "type": "error",
+    "name": "GovernorInvalidVoteParams",
+    "inputs": []
   },
   {
     "type": "error",
@@ -1613,16 +1618,6 @@
   {
     "type": "error",
     "name": "InvalidShortString",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "QueueEmpty",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "QueueFull",
     "inputs": []
   },
   {
