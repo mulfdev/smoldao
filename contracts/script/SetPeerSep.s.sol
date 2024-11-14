@@ -3,11 +3,11 @@ pragma solidity ^0.8.20;
 
 import {Script, console2} from "forge-std/Script.sol";
 import {BridgeFromArb} from "../src/BridgeFromArb.sol";
-import {BaseScript} from "./Script";
+import {BaseScript} from "./Base.s.sol";
 
 contract SetPeerSep is BaseScript {
     // Chain EIDs
-    uint32 constant ARB_SEPOLIA_EID = 40161; // Verify this is correct
+    uint32 constant ARB_SEPOLIA_EID = 40161;
 
     function addressToBytes32(address _addr) public pure returns (bytes32) {
         return bytes32(uint256(uint160(_addr)));
