@@ -48,7 +48,7 @@ export default function Index() {
   return (
     <>
       <header>
-        <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
+        <h1 className="leading text-4xl font-bold text-gray-800 dark:text-gray-100">
           Welcome to SmolDAO
         </h1>
       </header>
