@@ -8,6 +8,8 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       remix({
+
+        ssr: false,
         future: {
           v3_fetcherPersist: true,
           v3_relativeSplatPath: true,
