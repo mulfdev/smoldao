@@ -6,17 +6,15 @@ import {
   fromUnixTime,
   isAfter,
   isBefore,
-  addSeconds
 } from 'date-fns';
 
-// Constants for block number calculations
 const ARBITRUM_SEPOLIA_BASE_BLOCK = 90300658;
-const BLOCKS_PER_SECOND = 4; // Arbitrum Sepolia averages ~4 blocks/second
+const BLOCKS_PER_SECOND = 4;
 
 export function useBlockTime() {
   const { data: currentBlock, isError, isLoading } = useBlockNumber({
     watch: false,
-    chainId: 421614, // Arbitrum Sepolia chain ID
+    chainId: 421614,
   });
 
   const getBlockTimestamp = (blockNumber: string | number): number | null => {
@@ -139,7 +137,7 @@ const ProposalInfo = ({ proposals }: { proposals: Proposal[] }) => {
   if (!proposals || proposals.length === 0) return <div>No proposals found</div>;
 
   return (
-    <div className="mx-auto p-3 mb-16 sm:w-1/2">
+    <div className="mx-auto p-3 mb-16 w-full sm:w-2/3">
       <h1 className="text-3xl font-bold mb-6 text-white">Proposals</h1>
       <div className="text-sm text-gray-400 mb-4">
         Current Block: {currentBlock.toString()}
@@ -166,46 +164,42 @@ const ProposalInfo = ({ proposals }: { proposals: Proposal[] }) => {
                 <p className="text-gray-100">{proposal.description || 'No description provided'}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-4">
-                  <div className="space-y-1">
-                    <p className="text-md font-medium text-gray-400">Proposer</p>
-                    <p className="text-blue-400 font-mono">
-                      {truncateString(proposal.proposer)}
-                    </p>
-                  </div>
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <div className="space-y-1">
+                  <p className="text-md font-medium text-gray-400">Proposer</p>
+                  <p className="text-blue-400 font-mono">
+                    {truncateString(proposal.proposer)}
+                  </p>
+                </div>
 
-                  <div className="space-y-1">
-                    <p className="text-md font-medium text-gray-400">Voting Status</p>
-                    <p className="text-gray-300 text-sm">
-                      {getVotingStatus(proposal.voteStart, proposal.voteEnd)}
+                <div className="space-y-1">
+                  <p className="text-md font-medium text-gray-400">Voting Status</p>
+                  <p className="text-gray-300 text-sm">
+                    {getVotingStatus(proposal.voteStart, proposal.voteEnd)}
+                  </p>
+                </div>
+
+                <div className="space-y-1">
+                  <p className="text-md font-medium text-gray-400">Vote Start</p>
+                  <div className="space-y-0.5">
+                    <p className="text-gray-100 text-sm">
+                      {proposal.voteStart ? getBlockTimeFromNow(proposal.voteStart) : 'Unknown'}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Block {getNetworkBlock(proposal.voteStart).toLocaleString()}
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="space-y-1">
-                    <p className="text-md font-medium text-gray-400">Vote Start</p>
-                    <div className="space-y-0.5">
-                      <p className="text-gray-100 text-sm">
-                        {proposal.voteStart ? getBlockTimeFromNow(proposal.voteStart) : 'Unknown'}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Block {getNetworkBlock(proposal.voteStart).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <p className="text-md font-medium text-gray-400">Vote End</p>
-                    <div className="space-y-0.5">
-                      <p className="text-gray-100">
-                        {proposal.voteEnd ? getBlockTimeFromNow(proposal.voteEnd) : 'Unknown'}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Block #{getNetworkBlock(proposal.voteEnd).toLocaleString()}
-                      </p>
-                    </div>
+                <div className="space-y-1">
+                  <p className="text-md font-medium text-gray-400">Vote End</p>
+                  <div className="space-y-0.5">
+                    <p className="text-gray-100">
+                      {proposal.voteEnd ? getBlockTimeFromNow(proposal.voteEnd) : 'Unknown'}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Block #{getNetworkBlock(proposal.voteEnd).toLocaleString()}
+                    </p>
                   </div>
                 </div>
               </div>
