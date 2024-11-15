@@ -1,4 +1,5 @@
 import {
+  Link,
   Links,
   Meta,
   Outlet,
@@ -66,6 +67,13 @@ export default function App() {
   return (
     <Web3Provider env={ENV}>
       <div className="p-8 w-full flex justify-end items-center">
+        <nav className="w-full">
+          <ul className="flex gap-5 text-lg items-end">
+            <Link to="/"><li className="text-2xl font-bold">SmolDAO</li></Link>
+            <Link to="/deposit"><li className="hover:underline hover:underline-offset-4 cursor-pointer">Vault</li></Link>
+            <Link to="/propose"><li className="hover:underline hover:underline-offset-4 cursor-pointer">New Proposal</li></Link>
+          </ul>
+        </nav>
         <ConnectKitButton />
       </div>
       <div className="flex items-center justify-center">
