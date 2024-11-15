@@ -27,22 +27,10 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export async function loader() {
-  if (typeof process.env.WALLETCONNECT_PROJECT_ID !== "string") {
-    throw new Error("WALLETCONNECT_PROJECT_ID required");
-  }
-  if (typeof process.env.RPC_URL !== "string") {
-    throw new Error("RPC_URL required");
-  }
-
-  return {
-    ENV: {
-      WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
-      RPC_URL: process.env.RPC_URL,
-    },
-  };
-}
-
+const ENV = {
+  WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
+  RPC_URL: process.env.RPC_URL
+};
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -63,7 +51,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { ENV } = useLoaderData<typeof loader>();
   return (
     <Web3Provider env={ENV}>
       <div className="p-8 w-full flex justify-end items-center">
