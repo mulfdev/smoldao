@@ -13,8 +13,6 @@ export function setupWagmi(RPC_URL: string, WALLETCONNECT_PROJECT_ID: string) {
         // RPC URL for each chain
         [arbitrumSepolia.id]: http(RPC_URL),
       },
-      ssr: true,
-
       // Required API Keys
       walletConnectProjectId: WALLETCONNECT_PROJECT_ID,
 
