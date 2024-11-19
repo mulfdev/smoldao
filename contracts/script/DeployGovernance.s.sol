@@ -4,25 +4,16 @@ pragma solidity ^0.8.25;
 import {BaseScript} from "./Base.s.sol";
 import {SmolGov} from "../src/SmolGov.sol";
 import {SmolGovernor} from "../src/SmolGovernor.sol";
-import {SmolVault} from "../src/SmolVault.sol";
 import "@openzeppelin/contracts/governance/TimelockController.sol";
-import {Stub1155} from "../src/stub/Stub1155.sol";
 import "forge-std/console.sol";
 
 contract Deploy is BaseScript {
     function run() public broadcaster {
         // Deploy SmolGov first
         SmolGov govToken = new SmolGov(deployer);
-        Stub1155 erc1155 = new Stub1155();
-        console.log("ERC1155 deployed to:", address(erc1155));
         // Then deploy SmolVault with the govToken address
-        SmolVault smolVault = new SmolVault(
-            address(erc1155),
-            address(govToken)
-        );
-
         // Transfer ownership of govToken to smolVault
-        govToken.transferOwnership(address(smolVault));
+        govToken.transferOwnership(address(""));
         // Rest of the deployment script remains the same...
         address[] memory proposers = new address[](1);
         proposers[0] = deployer;
@@ -66,9 +57,6 @@ contract Deploy is BaseScript {
                 '  "SmolGovernor": "',
                 vm.toString(address(governor)),
                 '",\n',
-                '  "SmolVault": "',
-                vm.toString(address(smolVault)),
-                '"\n',
                 "}"
             )
         );
@@ -83,6 +71,5 @@ contract Deploy is BaseScript {
         );
         console.log("TimelockController deployed at:", address(timelock));
         console.log("Governor (SmolGovernor) deployed at:", address(governor));
-        console.log("Vault (SmolVault) deployed at:", address(smolVault));
     }
 }
