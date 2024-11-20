@@ -3,10 +3,9 @@ src = "src"
 out = "out"
 libs = ["lib"]
 remappings = [
+    '@layerzerolabs/oft-evm/=lib/devtools/packages/oft-evm/',
     '@layerzerolabs/oapp-evm/=lib/devtools/packages/oapp-evm/',
-    '@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/',
-    'forge-std/=lib/forge-std/src/',
-    '@layerzerolabs/lz-evm-protocol-v2/=lib/layerzero-v2/packages/layerzero-v2/evm/protocol'
+    '@layerzerolabs/lz-evm-protocol-v2/=lib/layerzero-v2/packages/layerzero-v2/evm/protocol',
 ]
 fs_permissions = [{ access = "read-write", path = "./"}]
 optimizer = true
