@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import {BaseScript} from "./Base.s.sol";
 import {SmolGovernor} from "../src/SmolGovernor.sol";
-import {SmolGov} from "../src/SmolGov.sol";
+import {Smol} from "../src/Smol.sol";
 import "forge-std/console.sol";
 
 contract CreateProp is BaseScript {
@@ -20,7 +20,7 @@ contract CreateProp is BaseScript {
         );
 
         SmolGovernor governor = SmolGovernor(payable(governorAddress));
-        SmolGov token = SmolGov(tokenAddress);
+        Smol token = Smol(tokenAddress);
 
         console.log("Deployer address:", deployer);
         console.log("Governor address:", address(governor));

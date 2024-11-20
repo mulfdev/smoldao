@@ -2,7 +2,7 @@
 pragma solidity ^0.8.25;
 
 import {BaseScript} from "./Base.s.sol";
-import {SmolGov} from "../src/SmolGov.sol";
+import {Smol} from "../src/Smol.sol";
 import {SmolGovernor} from "../src/SmolGovernor.sol";
 import "@openzeppelin/contracts/governance/TimelockController.sol";
 import "forge-std/console.sol";
@@ -10,7 +10,10 @@ import "forge-std/console.sol";
 contract Deploy is BaseScript {
     function run() public broadcaster {
         // Deploy SmolGov first
-        SmolGov govToken = new SmolGov(deployer);
+        Smol govToken = new Smol(
+            deployer,
+            0x6EDCE65403992e310A62460808c4b910D972f10f
+        );
 
         address[] memory proposers = new address[](1);
         proposers[0] = deployer;
@@ -45,7 +48,7 @@ contract Deploy is BaseScript {
         string memory jsonOutput = string(
             abi.encodePacked(
                 "{\n",
-                '  "SmolGov": "',
+                '  "Smol": "',
                 vm.toString(address(govToken)),
                 '",\n',
                 '  "TimelockController": "',
@@ -62,10 +65,7 @@ contract Deploy is BaseScript {
         vm.writeFile("deployed_addresses.json", jsonOutput);
 
         // Log deployed addresses
-        console.log(
-            "Governance Token (SmolGov) deployed at:",
-            address(govToken)
-        );
+        console.log("Governance Token (Smol) deployed at:", address(govToken));
         console.log("TimelockController deployed at:", address(timelock));
         console.log("Governor (SmolGovernor) deployed at:", address(governor));
     }
