@@ -11,10 +11,7 @@ contract Deploy is BaseScript {
     function run() public broadcaster {
         // Deploy SmolGov first
         SmolGov govToken = new SmolGov(deployer);
-        // Then deploy SmolVault with the govToken address
-        // Transfer ownership of govToken to smolVault
-        govToken.transferOwnership(address(""));
-        // Rest of the deployment script remains the same...
+
         address[] memory proposers = new address[](1);
         proposers[0] = deployer;
         address[] memory executors = new address[](1);
