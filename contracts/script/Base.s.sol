@@ -3,18 +3,22 @@ pragma solidity ^0.8.20;
 import {Script, console} from "forge-std/Script.sol";
 
 abstract contract BaseScript is Script {
-    string constant DEPLOYMENTS_PATH = "deployments.json";
+    string constant DEPLOYMENTS_PATH = "deployed_addresses.json";
     address internal deployer;
     uint256 internal deployerPrivateKey;
 
+    function getDeployerPrivateKey() internal view returns (uint256) {
+        string memory privKeyHex = vm.envString("PRIVATE_KEY");
+        return uint256(bytes32(vm.parseBytes32(privKeyHex)));
+    }
+
     constructor() {
-        deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        deployerPrivateKey = getDeployerPrivateKey();
         deployer = vm.addr(deployerPrivateKey);
     }
 
     modifier broadcaster() {
-        console.log("address: ");
-        console.log(deployer);
+        console.log("Deployer:", deployer);
         vm.startBroadcast(deployerPrivateKey);
         _;
         vm.stopBroadcast();
