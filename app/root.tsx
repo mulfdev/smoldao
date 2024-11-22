@@ -5,7 +5,6 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
@@ -27,10 +26,23 @@ export const links: LinksFunction = () => [
   },
 ];
 
-const ENV = {
-  WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
-  RPC_URL: process.env.RPC_URL
-};
+function checkEnvConfig() {
+  if (typeof process.env.WALLETCONNECT_PROJECT_ID !== "string") {
+    throw new Error("WALLETCONNECT_PROJECT_ID env required")
+  }
+  if (typeof process.env.RPC_URL !== "string") {
+    throw new Error("RPC_URL env required")
+  }
+
+  return {
+    WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
+    RPC_URL: process.env.RPC_URL
+  }
+}
+
+
+const ENV = checkEnvConfig();
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
