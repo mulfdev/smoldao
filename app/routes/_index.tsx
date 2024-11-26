@@ -24,7 +24,10 @@ const PropsQuery = gql`
 `;
 
 export const meta: MetaFunction = () => {
-    return [{ title: "SmolDAO" }, { name: "description", content: "Smolest DAO around" }];
+    return [
+        { title: "SmolDAO, Only the Smol" },
+        { name: "description", content: "Smolest DAO around" },
+    ];
 };
 
 export async function clientLoader() {
