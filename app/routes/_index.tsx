@@ -11,6 +11,7 @@ const PropsQuery = gql`
         proposalCreateds {
             proposer
             proposalId
+            id
             voteEnd
             voteStart
             description
@@ -25,7 +26,7 @@ const PropsQuery = gql`
 
 export const meta: MetaFunction = () => {
     return [
-        { title: "SmolDAO, Only the Smol" },
+        { title: "SmolDAO - Only the Smol" },
         { name: "description", content: "Smolest DAO around" },
     ];
 };
