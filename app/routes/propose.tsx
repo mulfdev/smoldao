@@ -34,7 +34,6 @@ const erc20ABI = [
     },
 ] as const;
 
-// Helper functions moved to the top
 const isValidAddress = (address: string) => {
     return /^0x[a-fA-F0-9]{40}$/.test(address);
 };
@@ -59,7 +58,6 @@ export default function ProposePage() {
 
     const { writeContractAsync: propose } = useWriteContract();
 
-    // Fetch decimals when token address changes
     const { data: fetchedDecimals, error: decimalsError } = useReadContract({
         address: tokenAddress as `0x${string}`,
         abi: erc20ABI,
@@ -111,7 +109,7 @@ export default function ProposePage() {
                 setPreview(result);
                 timeout = null;
             }
-        }, 250);
+        }, 500);
     }
 
     const handleSubmit = async () => {
