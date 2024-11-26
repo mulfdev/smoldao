@@ -1,45 +1,17 @@
 import { ChangeEvent, useEffect, useState, useRef } from "react";
 import { useWriteContract, useReadContract } from "wagmi";
-import { parseEther, parseUnits, encodeFunctionData } from "viem";
+import { parseEther, parseUnits, encodeFunctionData, isAddress } from "viem";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import Button from "~/components/Button";
+import { erc20ABI, GOVERNOR_ADDRESS, governorABI, TransferType } from "~/core";
 
-const GOVERNOR_ADDRESS = "0x0B70F10f27badCd1341E78387607c6fd6fD8F8Dc" as const;
+const isValidAmount = (value: string): boolean => {
+    if (value === "") return false;
 
-type TransferType = "eth" | "erc20";
+    const num = Number(value);
 
-const governorABI = [
-    {
-        name: "propose",
-        type: "function",
-        stateMutability: "nonpayable",
-        inputs: [
-            { name: "targets", type: "address[]" },
-            { name: "values", type: "uint256[]" },
-            { name: "calldatas", type: "bytes[]" },
-            { name: "description", type: "string" },
-        ],
-        outputs: [{ name: "", type: "uint256" }],
-    },
-] as const;
-
-const erc20ABI = [
-    {
-        name: "decimals",
-        type: "function",
-        stateMutability: "view",
-        inputs: [],
-        outputs: [{ type: "uint8" }],
-    },
-] as const;
-
-const isValidAddress = (address: string) => {
-    return /^0x[a-fA-F0-9]{40}$/.test(address);
-};
-
-const isValidAmount = (value: string) => {
-    return /^\d*\.?\d*$/.test(value) && value !== "";
+    return !isNaN(num) && num >= 0;
 };
 
 export default function ProposePage() {
@@ -49,7 +21,6 @@ export default function ProposePage() {
     const [recipient, setRecipient] = useState("");
     const [amount, setAmount] = useState("");
     const [tokenAddress, setTokenAddress] = useState("");
-    const [decimals, setDecimals] = useState<number>(18);
     const [isLoadingDecimals, setIsLoadingDecimals] = useState(false);
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -63,20 +34,9 @@ export default function ProposePage() {
         abi: erc20ABI,
         functionName: "decimals",
         query: {
-            enabled: transferType === "erc20" && isValidAddress(tokenAddress),
+            enabled: transferType === "erc20" && isAddress(tokenAddress),
         },
     });
-
-    useEffect(() => {
-        if (fetchedDecimals !== undefined) {
-            setDecimals(Number(fetchedDecimals));
-            setIsLoadingDecimals(false);
-        }
-        if (decimalsError) {
-            setIsLoadingDecimals(false);
-            console.error("Error fetching decimals:", decimalsError);
-        }
-    }, [fetchedDecimals, decimalsError]);
 
     function scroller() {
         if (previewRef.current === null || textareaRef.current === null) return;
@@ -113,7 +73,7 @@ export default function ProposePage() {
     }
 
     const handleSubmit = async () => {
-        if (!recipient || !amount || text.length < 500) return;
+        if (!recipient || !amount || text.length < 500 || !fetchedDecimals) return;
 
         let targets: `0x${string}`[] = [];
         let values: bigint[] = [];
@@ -140,7 +100,7 @@ export default function ProposePage() {
                         },
                     ],
                     functionName: "transfer",
-                    args: [recipient as `0x${string}`, parseUnits(amount, decimals)],
+                    args: [recipient as `0x${string}`, parseUnits(amount, fetchedDecimals)],
                 }),
             ];
         }
@@ -168,19 +128,19 @@ export default function ProposePage() {
     const handleTokenAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newAddress = e.target.value;
         setTokenAddress(newAddress);
-        if (isValidAddress(newAddress)) {
+        if (isAddress(newAddress)) {
             setIsLoadingDecimals(true);
         }
     };
 
     const isSubmitDisabled = () => {
         const basicValidation =
-            !isValidAddress(recipient) || !isValidAmount(amount) || text.length < 500;
+            !isAddress(recipient) || !isValidAmount(amount) || text.length < 500;
 
         if (transferType === "erc20") {
             return (
                 basicValidation ||
-                !isValidAddress(tokenAddress) ||
+                !isAddress(tokenAddress) ||
                 isLoadingDecimals ||
                 decimalsError !== null
             );
@@ -233,12 +193,12 @@ export default function ProposePage() {
                                         value={recipient}
                                         onChange={(e) => setRecipient(e.target.value)}
                                         className={`w-full p-3 bg-gray-700 border text-white rounded-lg focus:ring-2 focus:ring-blue-500 ${
-                                            !recipient || isValidAddress(recipient)
+                                            !recipient || isAddress(recipient)
                                                 ? "border-gray-600"
                                                 : "border-red-500"
                                         }`}
                                     />
-                                    {recipient && !isValidAddress(recipient) && (
+                                    {recipient && !isAddress(recipient) && (
                                         <p className="text-red-500 text-sm mt-1">
                                             Invalid address format
                                         </p>
@@ -284,7 +244,7 @@ export default function ProposePage() {
                                             value={tokenAddress}
                                             onChange={handleTokenAddressChange}
                                             className={`w-full p-3 bg-gray-700 border text-white rounded-lg focus:ring-2 focus:ring-blue-500 ${
-                                                !tokenAddress || isValidAddress(tokenAddress)
+                                                !tokenAddress || isAddress(tokenAddress)
                                                     ? "border-gray-600"
                                                     : "border-red-500"
                                             }`}
@@ -299,9 +259,9 @@ export default function ProposePage() {
                                                     Error loading token decimals. Please verify the
                                                     token address.
                                                 </span>
-                                            ) : isValidAddress(tokenAddress) ? (
+                                            ) : isAddress(tokenAddress) ? (
                                                 <span className="text-green-500">
-                                                    Token decimals: {decimals}
+                                                    Token decimals: {fetchedDecimals}
                                                 </span>
                                             ) : null}
                                         </div>
@@ -333,7 +293,8 @@ export default function ProposePage() {
                                         ></textarea>
                                     </div>
                                     <div
-                                        className="h-full p-4 prose prose-stone max-w-none prose-invert bg-gray-700 border border-gray-600 overflow-auto rounded-lg
+                                        className="h-full p-4 prose prose-stone max-w-none prose-invert bg-gray-700 border border-gray-600
+                                        overflow-auto rounded-lg
                                         prose-headings:text-gray-100
                                         prose-p:text-gray-200
                                         prose-strong:text-white
@@ -358,32 +319,29 @@ export default function ProposePage() {
                                     />
                                 </div>
                                 <p className="text-sm text-gray-400">
-                                    Supports markdown formatting. Preview shown on the right.
+                                    Supports markdown formatting
                                 </p>
                             </div>
                         </div>
-                        <div className="">
-                            <div className="container mx-auto p-4">
-                                <div className="flex items-center gap-4">
-                                    <Button
-                                        onClick={handleSubmit}
-                                        disabled={isSubmitDisabled()}
-                                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600"
-                                    >
-                                        Submit Proposal
-                                    </Button>
-                                    {text.length < 500 && (
-                                        <span className="text-red-500">
-                                            {500 - text.length} more characters needed
-                                        </span>
-                                    )}
-                                </div>
+                        <div className="container mx-auto p-4">
+                            <div className="flex items-center gap-4">
+                                <Button
+                                    onClick={handleSubmit}
+                                    disabled={isSubmitDisabled()}
+                                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600"
+                                >
+                                    Submit Proposal
+                                </Button>
+                                {text.length < 500 && (
+                                    <span className="text-red-500">
+                                        {500 - text.length} more characters needed
+                                    </span>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {/* Fixed Footer */}
         </>
     );
 }
