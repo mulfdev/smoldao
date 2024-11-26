@@ -196,33 +196,61 @@ export default function ProposePage() {
             <h1 className="text-3xl font-bold mb-4">Submit Your Proposal</h1>
 
             <div className="mb-6 grid grid-cols-1 gap-4 max-w-xl">
-                <select
-                    value={transferType}
-                    onChange={(e) => setTransferType(e.target.value as TransferType)}
-                    className="w-full p-2 bg-white text-black rounded"
-                >
-                    <option value="eth">ETH Transfer</option>
-                    <option value="erc20">ERC20 Transfer</option>
-                </select>
+                <div className="space-y-2">
+                    <label htmlFor="transferType" className="block text-sm font-medium">
+                        Transfer Type
+                    </label>
+                    <select
+                        id="transferType"
+                        value={transferType}
+                        onChange={(e) => setTransferType(e.target.value as TransferType)}
+                        className="w-full p-2 bg-white text-black rounded"
+                    >
+                        <option value="eth">ETH Transfer</option>
+                        <option value="erc20">ERC20 Transfer</option>
+                    </select>
+                </div>
 
-                <input
-                    placeholder="Recipient Address (0x...)"
-                    value={recipient}
-                    onChange={(e) => setRecipient(e.target.value)}
-                    className={`w-full p-2 text-black rounded ${!recipient || isValidAddress(recipient) ? "" : "border-red-500 border-2"}`}
-                />
+                <div className="space-y-2">
+                    <label htmlFor="recipient" className="block text-sm font-medium">
+                        Recipient Address
+                    </label>
+                    <input
+                        id="recipient"
+                        placeholder="0x..."
+                        value={recipient}
+                        onChange={(e) => setRecipient(e.target.value)}
+                        className={`w-full p-2 text-black rounded ${!recipient || isValidAddress(recipient) ? "" : "border-red-500 border-2"}`}
+                    />
+                    {recipient && !isValidAddress(recipient) && (
+                        <p className="text-red-500 text-sm">Invalid address format</p>
+                    )}
+                </div>
 
-                <input
-                    placeholder={`Amount in ${transferType === "eth" ? "ETH" : "tokens"}`}
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className={`w-full p-2 text-black rounded ${!amount || isValidAmount(amount) ? "" : "border-red-500 border-2"}`}
-                />
+                <div className="space-y-2">
+                    <label htmlFor="amount" className="block text-sm font-medium">
+                        Amount {transferType === "eth" ? "(in ETH)" : "(in tokens)"}
+                    </label>
+                    <input
+                        id="amount"
+                        placeholder="0.0"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        className={`w-full p-2 text-black rounded ${!amount || isValidAmount(amount) ? "" : "border-red-500 border-2"}`}
+                    />
+                    {amount && !isValidAmount(amount) && (
+                        <p className="text-red-500 text-sm">Invalid amount format</p>
+                    )}
+                </div>
 
                 {transferType === "erc20" && (
                     <div className="space-y-2">
+                        <label htmlFor="tokenAddress" className="block text-sm font-medium">
+                            Token Contract Address
+                        </label>
                         <input
-                            placeholder="Token Address (0x...)"
+                            id="tokenAddress"
+                            placeholder="0x..."
                             value={tokenAddress}
                             onChange={handleTokenAddressChange}
                             className={`w-full p-2 text-black rounded ${!tokenAddress || isValidAddress(tokenAddress) ? "" : "border-red-500 border-2"}`}
@@ -231,32 +259,48 @@ export default function ProposePage() {
                             {isLoadingDecimals ? (
                                 <span className="text-yellow-500">Loading token decimals...</span>
                             ) : decimalsError ? (
-                                <span className="text-red-500">Error loading token decimals</span>
+                                <span className="text-red-500">
+                                    Error loading token decimals. Please verify the token address.
+                                </span>
                             ) : isValidAddress(tokenAddress) ? (
                                 <span className="text-green-500">Token decimals: {decimals}</span>
                             ) : null}
                         </div>
+                        {tokenAddress && !isValidAddress(tokenAddress) && (
+                            <p className="text-red-500 text-sm">Invalid token address format</p>
+                        )}
                     </div>
                 )}
             </div>
 
-            <div className="w-full flex gap-4 h-[600px] mb-6">
-                <div className="w-1/2">
-                    <textarea
-                        onScroll={scroller}
-                        className="w-full h-full text-black p-2 outline-none rounded"
-                        value={text}
-                        ref={textareaRef}
-                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setText(e.target.value)}
-                        onKeyUp={renderPreview}
-                        placeholder="Describe your proposal (minimum 500 characters)..."
-                    ></textarea>
+            <div className="space-y-2 mb-6">
+                <label htmlFor="proposal" className="block text-sm font-medium">
+                    Proposal Description (minimum 500 characters)
+                </label>
+                <div className="w-full flex gap-4 h-[600px]">
+                    <div className="w-1/2">
+                        <textarea
+                            id="proposal"
+                            onScroll={scroller}
+                            className="w-full h-full text-black p-2 outline-none rounded"
+                            value={text}
+                            ref={textareaRef}
+                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                setText(e.target.value)
+                            }
+                            onKeyUp={renderPreview}
+                            placeholder="# Title&#10;&#10;## Summary&#10;&#10;## Details&#10;&#10;## Impact"
+                        ></textarea>
+                    </div>
+                    <div
+                        className="w-1/2 p-2 prose prose-slate prose-invert border overflow-scroll rounded"
+                        ref={previewRef}
+                        dangerouslySetInnerHTML={{ __html: preview }}
+                    />
                 </div>
-                <div
-                    className="w-1/2 p-2 prose prose-slate prose-invert border overflow-scroll rounded"
-                    ref={previewRef}
-                    dangerouslySetInnerHTML={{ __html: preview }}
-                />
+                <p className="text-sm text-gray-400">
+                    Supports markdown formatting. Preview shown on the right.
+                </p>
             </div>
 
             <div className="flex items-center gap-4">
