@@ -7,6 +7,7 @@ import {
     isAfter,
     isBefore,
 } from "date-fns";
+import { Link } from "@remix-run/react";
 
 const ARBITRUM_SEPOLIA_BASE_BLOCK = 90300658;
 const BLOCKS_PER_SECOND = 4;
@@ -155,9 +156,11 @@ const ProposalInfo = ({ proposals }: { proposals: Proposal[] }) => {
                         className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden"
                     >
                         <div className="p-4 border-b border-gray-700 flex justify-between items-center">
-                            <h2 className="text-xl font-semibold text-white">
-                                Proposal {truncateString(proposal.proposalId)}
-                            </h2>
+                            <Link to={`/proposals/${proposal.id}`} viewTransition>
+                                <h2 className="text-xl font-semibold text-white">
+                                    Proposal {truncateString(proposal.proposalId)}
+                                </h2>
+                            </Link>
                             <span className="text-sm text-gray-400">
                                 {getSubmissionTime(proposal.description)}
                             </span>
