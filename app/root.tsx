@@ -68,7 +68,7 @@ export default function App() {
                 <ConnectKitButton />
             </div>
             <div className="flex items-center justify-center">
-                <div className="flex flex-col items-center gap-16 w-full">
+                <div className="flex flex-col items-center w-full">
                     <Outlet />
                 </div>
             </div>
