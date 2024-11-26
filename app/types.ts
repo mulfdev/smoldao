@@ -9,4 +9,5 @@ export type Proposal = {
     values: string;
     voteEnd: string;
     voteStart: string;
+    id: string;
 };
