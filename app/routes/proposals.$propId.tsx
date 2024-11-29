@@ -1,4 +1,4 @@
-import { ClientLoaderFunctionArgs } from "@remix-run/react";
+import { ClientLoaderFunctionArgs, useLoaderData } from "@remix-run/react";
 import { gql } from "urql";
 import { gqlClient } from "~/gqlConfig";
 
@@ -24,5 +24,9 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 }
 
 export default function ViewSingleProp() {
+    const propData = useLoaderData<typeof clientLoader>();
+
+    if (typeof propData === "undefined") return <>Loading...</>;
+
     return <p>Hello single prop</p>;
 }

@@ -55,10 +55,10 @@ export default function App() {
             <div className="p-8 w-full flex justify-end items-center">
                 <nav className="w-full">
                     <ul className="flex gap-5 text-lg items-end">
-                        <Link to="/">
+                        <Link to="/" viewTransition>
                             <li className="text-2xl font-bold">SmolDAO</li>
                         </Link>
-                        <Link to="/propose">
+                        <Link to="/propose" viewTransition>
                             <li className="hover:underline hover:underline-offset-4 cursor-pointer">
                                 Propose
                             </li>
