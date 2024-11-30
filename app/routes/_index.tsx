@@ -6,24 +6,6 @@ import { gql } from "@urql/core";
 import ProposalInfo from "~/components/ViewProposals";
 import { gqlClient } from "~/gqlConfig";
 
-const PropsQuery = gql`
-    query {
-        proposalCreateds {
-            proposer
-            proposalId
-            id
-            voteEnd
-            voteStart
-            description
-            targets
-            block_number
-            values
-            calldatas
-            timestamp_
-        }
-    }
-`;
-
 export const meta: MetaFunction = () => {
     return [
         { title: "SmolDAO - Only the Smol" },
@@ -32,6 +14,24 @@ export const meta: MetaFunction = () => {
 };
 
 export async function clientLoader() {
+    const PropsQuery = gql`
+        query {
+            proposalCreateds {
+                proposer
+                proposalId
+                id
+                voteEnd
+                voteStart
+                description
+                targets
+                block_number
+                values
+                calldatas
+                timestamp_
+            }
+        }
+    `;
+
     const result = await gqlClient.query(PropsQuery, {}).toPromise();
     return result;
 }
