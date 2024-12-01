@@ -5,7 +5,7 @@ export type Proposal = {
     proposalId: string;
     proposer: string;
     targets: string;
-    timestamp_s: string;
+    timestamp_: string;
     values: string;
     voteEnd: string;
     voteStart: string;
