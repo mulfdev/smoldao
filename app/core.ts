@@ -23,7 +23,12 @@ export function assertType(val: unknown, type: BasicType, errMsg?: string): asse
     throw new Error(`Type of val ${typeof val} did not match expected ${type}`);
 }
 
-export const GOVERNOR_ADDRESS = "0x0B70F10f27badCd1341E78387607c6fd6fD8F8Dc" as const;
+export function truncateString(str: string): string {
+    if (!str) return "";
+    return str.slice(0, 12);
+}
+
+export const GOVERNOR_ADDRESS = "0xfeCbE182F83b0FC3A1a7aF0727b9989405b65e81" as const;
 
 export const governorABI = [
     {
