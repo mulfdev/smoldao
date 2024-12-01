@@ -2,115 +2,105 @@ import { Link } from "@remix-run/react";
 import { useBlockNumber } from "wagmi";
 import { formatDistanceToNow, fromUnixTime } from "date-fns";
 import { Proposal } from "~/types";
+import { marked } from "marked";
+import { useState } from "react";
+import DOMPurify from "dompurify";
+import { truncateString } from "~/core";
 
 type Props = {
     proposal: Proposal;
 };
 
-function truncateString(str: string): string {
-    if (!str) return "";
-    return str.slice(0, 12);
-}
-
-function blockOffset(block: number) {
-    const START_BLOCK = 88421851;
-
-    return block + START_BLOCK;
-}
-
-const getSubmissionTime = (description: string): string => {
-    if (!description) return "Unknown time";
-
-    const match = description.match(/timestamp: (\d+)/);
-    if (!match) return "Unknown time";
-
-    const timestamp = parseInt(match[1]);
-    if (isNaN(timestamp)) return "Unknown time";
-
-    const submissionDate = fromUnixTime(timestamp);
-    return formatDistanceToNow(submissionDate, { addSuffix: true });
-};
-
-const { data } = useBlockNumber();
-
 export default function ViewProposal({ proposal }: Props) {
+    const { data: blockNumber, isLoading, isError } = useBlockNumber();
+    const [description, setDescription] = useState("");
+
+    if (isLoading) return <div className="text-gray-400">Loading...</div>;
+    if (isError) return <div className="text-red-400">Could not load data</div>;
+    if (!blockNumber) return <div className="text-red-400">Error</div>;
+
+    function renderDescription(propText: string) {
+        marked.use({ async: true });
+        const result = marked.parse(propText);
+
+        if (result instanceof Promise) {
+            result
+                .then((html) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, "text/html");
+
+                    const h1 = doc.querySelector("h1")?.textContent;
+                    const h2 = doc.querySelector("h2")?.textContent;
+                    const p = doc.querySelector("p")?.textContent?.slice(0, 250);
+
+                    setDescription(DOMPurify.sanitize(h1 || h2 || p || ""));
+                })
+                .catch(console.log);
+        }
+    }
+
+    const relativeDate = formatDistanceToNow(fromUnixTime(+proposal.timestamp_), {
+        addSuffix: true,
+    });
+
+    renderDescription(proposal.description);
+
+    const isActive = blockNumber < +proposal.voteEnd;
+
     return (
-        <div
-            key={proposal.proposalId}
-            className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden"
-        >
-            <div className="p-4 border-b border-gray-700 flex justify-between items-center">
-                <Link to={`/proposals/${proposal.id}`} viewTransition>
-                    <h2 className="text-xl font-semibold text-white">
-                        Proposal {truncateString(proposal.proposalId)}
-                    </h2>
-                </Link>
-                <span className="text-sm text-gray-400">
-                    {getSubmissionTime(proposal.description)}
-                </span>
-            </div>
+        <div className="container mx-auto p-4">
+            <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl overflow-hidden">
+                <div className="p-6 border-b border-gray-700">
+                    <div className="flex justify-between items-center mb-4">
+                        <Link
+                            to={`/proposals/${proposal.id}`}
+                            className="text-2xl font-bold text-white hover:text-blue-400 transition-colors"
+                            viewTransition
+                        >
+                            Proposal {truncateString(proposal.proposalId)}
+                        </Link>
+                        <span className="text-gray-400">{relativeDate}</span>
+                    </div>
 
-            <div className="p-4 space-y-4">
-                <div className="space-y-1">
-                    <p className="text-md font-medium text-gray-400">Description</p>
-                    <p className="text-gray-100">
-                        {proposal.description || "No description provided"}
-                    </p>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                    <div className="space-y-1">
-                        <p className="text-md font-medium text-gray-400">Proposer</p>
-                        <p className="text-blue-400 font-mono">
+                    <div className="flex items-center space-x-3">
+                        <span
+                            className={`px-3 py-1 rounded-full text-sm ${
+                                isActive
+                                    ? "bg-green-500/20 text-green-400"
+                                    : "bg-red-500/20 text-red-400"
+                            }`}
+                        >
+                            {isActive ? "Active" : "Ended"}
+                        </span>
+                        <span className="text-gray-400">by</span>
+                        <span className="text-blue-400 font-mono">
                             {truncateString(proposal.proposer)}
-                        </p>
-                    </div>
-
-                    <div className="space-y-1">
-                        <p className="text-md font-medium text-gray-400">Voting Status</p>
-                        <p className="text-gray-300 text-sm">
-                            {+data > +proposal.voteEnd ? "Ongoing" : "Ended"}
-                        </p>
-                    </div>
-
-                    <div className="space-y-1">
-                        <p className="text-md font-medium text-gray-400">Vote Start</p>
-                        <div className="space-y-0.5">
-                            <p className="text-gray-100 text-sm">
-                                {blockOffset(+proposal.voteStart)}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="space-y-1">
-                        <p className="text-md font-medium text-gray-400">Vote End</p>
-                        <div className="space-y-0.5">
-                            <p className="text-gray-100">
-                                {proposal.voteEnd ? proposal.voteEnd : "Unknown"}
-                            </p>
-                        </div>
+                        </span>
                     </div>
                 </div>
 
-                <details className="mt-4 pt-4 border-t border-gray-700">
-                    <summary className="text-sm text-gray-400 cursor-pointer hover:text-gray-300">
-                        View Technical Details
-                    </summary>
-                    <div className="mt-4 space-y-3">
-                        <div className="space-y-1">
-                            <p className="text-sm font-medium text-gray-400">Block Number</p>
-                            <p className="text-gray-300">{proposal.block_number || "Unknown"}</p>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-sm font-medium text-gray-400">Original Vote Start</p>
-                            <p className="text-gray-300">{proposal.voteStart}</p>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-sm font-medium text-gray-400">Original Vote End</p>
-                            <p className="text-gray-300">{proposal.voteEnd}</p>
-                        </div>
+                <div className="p-6 border-b border-gray-700">
+                    <h3 className="text-lg font-semibold text-gray-300 mb-3">Description</h3>
+                    <div
+                        className="prose prose-invert max-w-none
+                            prose-headings:text-gray-100
+                            prose-p:text-gray-300
+                            prose-strong:text-white"
+                        dangerouslySetInnerHTML={{ __html: description }}
+                    />
+                </div>
+
+                <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-4">
+                    <div className="bg-gray-700/50 p-4 rounded-lg">
+                        <h4 className="text-sm font-medium text-gray-400 mb-2">Vote Start</h4>
+                        <p className="text-gray-100">{proposal.voteStart}</p>
                     </div>
-                </details>
+
+                    <div className="bg-gray-700/50 p-4 rounded-lg">
+                        <h4 className="text-sm font-medium text-gray-400 mb-2">Vote End</h4>
+                        <p className="text-gray-100">{proposal.voteEnd}</p>
+                    </div>
+                </div>
             </div>
         </div>
     );
