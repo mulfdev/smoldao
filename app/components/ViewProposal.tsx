@@ -48,7 +48,7 @@ export default function ViewProposal({ proposal }: Props) {
     const isActive = blockNumber < +proposal.voteEnd;
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto">
             <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl overflow-hidden">
                 <div className="p-6 border-b border-gray-700">
                     <div className="flex justify-between items-center mb-4">

@@ -32,9 +32,9 @@ const ProposalInfo = () => {
         .catch((e) => console.log(e));
 
     return (
-        <div className="mx-auto p-3 mb-16 w-full sm:w-2/3">
-            <h1 className="text-3xl font-bold mb-6 text-white">Proposals</h1>
-            <div className="space-y-8">
+        <div className="mx-auto mb-16 w-full sm:w-2/3">
+            <h1 className="text-3xl font-bold mb-6 text-white px-6 sm:px-0">Proposals</h1>
+            <div className="space-y-8 px-6 sm:px-0">
                 {proposals.map((proposal: Proposal) => (
                     <ViewProposal proposal={proposal} key={proposal.id} />
                 ))}
