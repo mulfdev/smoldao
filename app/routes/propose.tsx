@@ -73,8 +73,10 @@ export default function ProposePage() {
     }
 
     const handleSubmit = async () => {
-        if (!recipient || !amount || text.length < 500 || !fetchedDecimals) return;
-
+        console.log("HERE");
+        console.log(fetchedDecimals);
+        if (!recipient || !amount || text.length < 500) return;
+        console.log("PROB not");
         let targets: `0x${string}`[] = [];
         let values: bigint[] = [];
         let calldatas: `0x${string}`[] = [];
@@ -84,6 +86,7 @@ export default function ProposePage() {
             values = [parseEther(amount)];
             calldatas = ["0x"];
         } else if (transferType === "erc20" && tokenAddress) {
+            if (!fetchedDecimals) return;
             targets = [tokenAddress as `0x${string}`];
             values = [0n];
             calldatas = [
@@ -106,6 +109,7 @@ export default function ProposePage() {
         }
 
         try {
+            console.log("PROP");
             await propose({
                 address: GOVERNOR_ADDRESS,
                 abi: governorABI,
