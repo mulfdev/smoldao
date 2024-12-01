@@ -1,15 +1,15 @@
 import { createConfig, http } from "wagmi";
-import { arbitrumSepolia } from "wagmi/chains";
+import { sepolia } from "wagmi/chains";
 import { getDefaultConfig } from "connectkit";
 
 export function setupWagmi(RPC_URL: string, WALLETCONNECT_PROJECT_ID: string) {
     const config = createConfig(
         getDefaultConfig({
             // Your dApps chains
-            chains: [arbitrumSepolia],
+            chains: [sepolia],
             transports: {
                 // RPC URL for each chain
-                [arbitrumSepolia.id]: http(RPC_URL),
+                [sepolia.id]: http(RPC_URL),
             },
             // Required API Keys
             walletConnectProjectId: WALLETCONNECT_PROJECT_ID,
