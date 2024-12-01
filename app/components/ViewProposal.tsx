@@ -54,7 +54,7 @@ export default function ViewProposal({ proposal }: Props) {
                     <div className="flex justify-between items-center mb-4">
                         <Link
                             to={`/proposals/${proposal.id}`}
-                            className="text-2xl font-bold text-white hover:text-blue-400 transition-colors"
+                            className="text-2xl font-bold text-white hover:text-blue-400 hover:underline transition-colors"
                             viewTransition
                         >
                             Proposal {truncateString(proposal.proposalId)}
