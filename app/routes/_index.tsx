@@ -13,31 +13,7 @@ export const meta: MetaFunction = () => {
     ];
 };
 
-export async function clientLoader() {
-    const PropsQuery = gql`
-        query {
-            proposalCreateds {
-                proposer
-                proposalId
-                id
-                voteEnd
-                voteStart
-                description
-                targets
-                block_number
-                values
-                calldatas
-                timestamp_
-            }
-        }
-    `;
-
-    const result = await gqlClient.query(PropsQuery, {}).toPromise();
-    return result;
-}
-
 export default function Index() {
-    const query = useLoaderData<typeof clientLoader>();
     return (
         <>
             <header>
@@ -45,7 +21,7 @@ export default function Index() {
                     Welcome to SmolDAO
                 </h1>
             </header>
-            <ProposalInfo proposals={query.data.proposalCreateds} />
+            <ProposalInfo />
         </>
     );
 }
