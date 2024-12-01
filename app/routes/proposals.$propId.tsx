@@ -270,7 +270,7 @@ const ProposalDetails = () => {
                     />
                 </div>
 
-                {isActive && !hasVoted && address && (
+                {isActive && !hasVoted && address ? (
                     <div className="p-6 border-t border-gray-700">
                         <h3 className="text-xl font-semibold text-gray-100 mb-4">Cast Your Vote</h3>
                         {canVote ? (
@@ -311,7 +311,7 @@ const ProposalDetails = () => {
                             </p>
                         )}
                     </div>
-                )}
+                ) : null}
 
                 {hasVoted && (
                     <div className="p-6 border-t border-gray-700">
@@ -319,13 +319,13 @@ const ProposalDetails = () => {
                     </div>
                 )}
 
-                {!address && isActive && (
+                {!address && isActive ? (
                     <div className="p-6 border-t border-gray-700">
                         <p className="text-gray-400">
                             Connect your wallet to vote on this proposal
                         </p>
                     </div>
-                )}
+                ) : null}
             </div>
         </div>
     );
