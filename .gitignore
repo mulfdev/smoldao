@@ -1,41 +1,6 @@
-# Ignore node_modules directories
 node_modules
 
-# Ignore .pnpm-store directory
-.pnpm-store
-
-# Ignore .pnpm-debug.log files
-.pnpm-debug.log
-
-# Ignore build output directories (customize as needed)
-dist
-build
-
-# Ignore environment files
+/.cache
+/build
 .env
-.env.local
-.env.*.local
-
-# Ignore IDE and editor files
-.vscode
-.idea
-*.swp
-*.swo
-
-# Ignore OS-specific files
-.DS_Store
-Thumbs.db
-
-# Ignore npm debug logs
-npm-debug.log*
-
-# Ignore yarn files if you're using yarn alongside pnpm
-yarn.lock
-yarn-error.log
-
-# Ignore coverage directory
-coverage
-
-# Ignore temporary files
-*.tmp
-*.temp
+.aider*
