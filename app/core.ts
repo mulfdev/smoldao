@@ -28,7 +28,7 @@ export function truncateString(str: string): string {
     return str.slice(0, 12);
 }
 
-export const GOVERNOR_ADDRESS = "0xfeCbE182F83b0FC3A1a7aF0727b9989405b65e81" as const;
+export const GOVERNOR_ADDRESS = "0xAD42BB9376336792124de2Ae4D82C3d1161091a5" as const;
 
 export const governorABI = [
     {
